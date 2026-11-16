@@ -1,5 +1,7 @@
 const menuToggle = document.querySelector(".menu-toggle");
 const navLinks = document.querySelector(".nav-links");
+const themeToggle = document.querySelector("#theme-toggle");
+const themeIcon = document.querySelector("#theme-icon");
 const contactForm = document.querySelector("#contact-form");
 const formStatus = document.querySelector(".form-status");
 const contactFields = ["name", "email", "message"].map((id) => document.querySelector(`#${id}`));
@@ -36,6 +38,25 @@ const projectDetails = {
 };
 
 let lastFocusedElement = null;
+
+// 저장된 테마를 적용하고 토글 버튼의 접근성 정보를 함께 갱신합니다.
+function applyTheme(theme) {
+  const isDark = theme === "dark";
+  document.documentElement.dataset.theme = isDark ? "dark" : "light";
+  themeToggle.setAttribute("aria-pressed", String(isDark));
+  themeToggle.setAttribute("aria-label", isDark ? "라이트 모드로 전환" : "다크 모드로 전환");
+  themeToggle.title = isDark ? "라이트 모드로 전환" : "다크 모드로 전환";
+  themeIcon.textContent = isDark ? "☀" : "☾";
+}
+
+const savedTheme = localStorage.getItem("portfolio-theme");
+applyTheme(savedTheme === "dark" ? "dark" : "light");
+
+themeToggle.addEventListener("click", () => {
+  const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  localStorage.setItem("portfolio-theme", nextTheme);
+  applyTheme(nextTheme);
+});
 
 menuToggle?.addEventListener("click", () => {
   const isOpen = navLinks.classList.toggle("is-open");
